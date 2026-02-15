@@ -1,0 +1,17 @@
+{
+  "name": "itquiz-app",
+  "version": "1.0.0",
+  "description": "IT Quiz project with frontend and backend",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "node backend/server.js",
+    "frontend": "http-server ./site -p 3000"
+  },
+  "dependencies": {
+    "concurrently": "^8.0.0",
+    "fs": "^0.0.1-security",
+    "http-server": "^14.1.1",
+    "pg": "^8.18.0"
+  }
+}
