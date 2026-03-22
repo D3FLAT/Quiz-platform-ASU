@@ -9,7 +9,11 @@ const Quiz = sequelize.define('Quiz', {
   description: {
     type: DataTypes.STRING,
     allowNull: true
-  }
+  }, 
+ableName: 'quizzes',
+  underscored: true,
+  timestamps: false
 });
+
 
 module.exports = Quiz;

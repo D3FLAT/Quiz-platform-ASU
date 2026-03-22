@@ -9,22 +9,36 @@ exports.register = async (req, res) => {
     const user = await User.create({ username, email, password: hashedPassword });
     res.status(201).json({ message: 'User registered' });
   } catch (err) {
+    console.error('REGISTER ERROR:', err.message);
     res.status(400).json({ error: err.message });
   }
 };
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+  console.log('LOGIN ATTEMPT:', { email });
   try {
-    const user = await User.findOne({ where: { email } });
+    const { Op } = require('sequelize');
+    const user = await User.findOne({
+      where: {
+        [Op.or]: [{ email: email }, { username: email }]
+      }
+    });
+    console.log('FOUND USER:', user ? user.dataValues : null);
+
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    const token = jwt.sign(
+      { userId: user.id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    res.json({ token, user: { id: user.id, username: user.username, email: user.email } });
   } catch (err) {
+    console.error('LOGIN ERROR:', err.message);
     res.status(500).json({ error: err.message });
   }
 };

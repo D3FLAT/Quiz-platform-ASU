@@ -504,28 +504,16 @@ document.addEventListener('DOMContentLoaded', async function() {
   console.log('Token:', token ? 'Есть' : 'Нет');
 });
 
-/**
- * Инициализация обработчиков фильтра
- */
-function initFilterHandlers() {
-  const searchInput = document.getElementById('searchInput');
-  const filterSelect = document.getElementById('filterSelect');
+document.addEventListener('input', function(e) {
+  if (e.target.id === 'searchInput') loadQuizzes();
+});
 
-  if (searchInput) {
-    searchInput.addEventListener('input', function() {
-      loadQuizzes();
-    });
-  }
-
-  if (filterSelect) {
-    filterSelect.addEventListener('change', function() {
-      loadQuizzes();
-    });
-  }
+document.addEventListener('change', function(e) {
+  if (e.target.id === 'filterSelect') loadQuizzes();
+});
 
   // Загружаем сохраненные настройки
   loadFilterSettings();
-}
 
 /**
  * Загрузка сохраненных настроек фильтра

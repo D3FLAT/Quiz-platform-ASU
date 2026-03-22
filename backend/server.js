@@ -13,11 +13,6 @@ const initDatabase = require("./db-init");
 })();
 
 
-sequelize.sync({ alter: true }).then(() => {
-  console.log('Database synced');
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}).catch(err => {
-  console.error('Database connection failed:', err);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
