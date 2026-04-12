@@ -1,6 +1,6 @@
 FROM node:18-alpine
 
-RUN apk add --no-cache dos2unix
+RUN apk add --no-cache dos2unix python3 make g++
 
 WORKDIR /app
 
