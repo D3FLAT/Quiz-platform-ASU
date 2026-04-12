@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +33,9 @@
             display: block;
         }
 
-        h1, h2, h3 {
+        h1,
+        h2,
+        h3 {
             color: #2c3e50;
         }
 
@@ -68,7 +71,9 @@
             background: #27ae60;
         }
 
-        input, textarea, select {
+        input,
+        textarea,
+        select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -296,6 +301,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Навигация -->
@@ -351,29 +357,25 @@
         <!-- Список квизов -->
         <div id="quizzes" class="page">
             <h1>Выберите квиз</h1>
-            
+
             <div class="tabs">
                 <div class="tab active" onclick="changeQuizTab('all')">Все квизы</div>
                 <div class="tab" onclick="changeQuizTab('my')">Мои квизы</div>
             </div>
-            
+
             <!-- Фильтр -->
             <div class="filter-container">
                 <button class="filter-toggle" onclick="toggleFilter()">
                     <span class="filter-icon">⚙️</span>
                     Фильтры и поиск
                 </button>
-                
+
                 <div class="filter-panel" id="filterPanel">
                     <div class="filter-group">
                         <label for="searchInput">🔍 Поиск по названию</label>
-                        <input
-                            type="text"
-                            id="searchInput"
-                            placeholder="Введите название..."
-                        />
+                        <input type="text" id="searchInput" placeholder="Введите название..." />
                     </div>
-                    
+
                     <div class="filter-group">
                         <label for="filterSelect">📊 Сортировать по</label>
                         <select id="filterSelect">
@@ -384,13 +386,13 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="allQuizzes" class="tab-content active">
                 <div class="quiz-list" id="quizList">
                     <p>Загрузка квизов...</p>
                 </div>
             </div>
-            
+
             <div id="myQuizzes" class="tab-content">
                 <div class="quiz-list" id="myQuizList">
                     <p>Загрузка...</p>
@@ -411,9 +413,9 @@
                     <option value="databases">Базы данных</option>
                     <option value="other">Другое</option>
                 </select>
-                
+
                 <div id="questionsContainer"></div>
-                
+
                 <button type="button" class="btn" onclick="addQuestion()">Добавить вопрос</button>
                 <div id="quizMessage" class="alert" style="display:none;"></div>
                 <button type="submit" class="btn btn-success">Сохранить квиз</button>
@@ -424,24 +426,26 @@
         <div id="play-quiz" class="page">
             <h1 id="quizPlayTitle"></h1>
             <p id="quizPlayDescription"></p>
-            
+
             <div class="progress-bar">
                 <div class="progress" id="quizProgress"></div>
             </div>
-            
+
             <div id="quizPlayArea">
                 <div id="questionContainer">
                     <h2 id="questionText"></h2>
                     <div id="optionsContainer"></div>
                 </div>
-                
+
                 <div id="resultContainer" class="alert" style="display:none;"></div>
                 <div id="scoreContainer">Счет: <span id="scoreValue">0</span></div>
-                
-                <button id="nextQuestionBtn" class="btn" style="display:none;" onclick="nextQuestion()">Следующий вопрос</button>
-                <button id="finishQuizBtn" class="btn btn-success" style="display:none;" onclick="finishQuiz()">Завершить квиз</button>
+
+                <button id="nextQuestionBtn" class="btn" style="display:none;" onclick="nextQuestion()">Следующий
+                    вопрос</button>
+                <button id="finishQuizBtn" class="btn btn-success" style="display:none;"
+                    onclick="finishQuiz()">Завершить квиз</button>
             </div>
-            
+
             <div id="quizResults" style="display:none;">
                 <h2>Результаты квиза</h2>
                 <p>Ваш счет: <span id="finalScore"></span> из <span id="totalQuestions"></span></p>
@@ -480,13 +484,13 @@
                 showPage('login');
                 return;
             }
-            
+
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
-            
+
             document.getElementById(pageId).classList.add('active');
-            
+
             if (pageId === 'quizzes' && typeof loadQuizzes === 'function') {
                 loadQuizzes();
             } else if (pageId === 'create-quiz') {
@@ -501,10 +505,10 @@
         }
 
         // Закрытие фильтра при клике вне
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             const panel = document.getElementById('filterPanel');
             const toggle = document.querySelector('.filter-toggle');
-            
+
             if (panel && toggle && !panel.contains(e.target) && !toggle.contains(e.target)) {
                 panel.classList.remove('show');
             }
@@ -514,7 +518,7 @@
         function changeQuizTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
+
             if (tab === 'all') {
                 document.querySelector('.tab:nth-child(1)').classList.add('active');
                 document.getElementById('allQuizzes').classList.add('active');
@@ -530,13 +534,13 @@
                 finishQuiz();
                 return;
             }
-            
+
             const question = currentQuiz.questions[currentQuestionIndex];
             document.getElementById('questionText').textContent = question.question;
-            
+
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = '';
-            
+
             question.options.forEach((option, index) => {
                 const optionElement = document.createElement('div');
                 optionElement.className = 'option';
@@ -544,10 +548,10 @@
                 optionElement.onclick = () => selectAnswer(option);
                 optionsContainer.appendChild(optionElement);
             });
-            
+
             const progress = (currentQuestionIndex / currentQuiz.questions.length) * 100;
             document.getElementById('quizProgress').style.width = `${progress}%`;
-            
+
             document.getElementById('nextQuestionBtn').style.display = 'none';
             document.getElementById('finishQuizBtn').style.display = 'none';
             document.getElementById('resultContainer').style.display = 'none';
@@ -556,42 +560,43 @@
         // Выбор ответа
         function selectAnswer(selectedOption) {
             const question = currentQuiz.questions[currentQuestionIndex];
-            const isCorrect = selectedOption === question.answer;
-            
+            const correctAnswer = question.correct_answer || question.answer;
+            const isCorrect = selectedOption === correctAnswer;
+
             userAnswers.push({
                 question: question.question,
                 userAnswer: selectedOption,
-                correctAnswer: question.answer,
-                isCorrect
+                correctAnswer: correctAnswer,
+                isCorrect: isCorrect
             });
-            
+
             const options = document.querySelectorAll('.option');
             options.forEach(option => {
                 option.classList.remove('selected', 'correct', 'incorrect');
                 option.onclick = null;
-                
+
                 if (option.textContent === selectedOption) {
                     option.classList.add('selected');
                     option.classList.add(isCorrect ? 'correct' : 'incorrect');
                 }
-                
-                if (option.textContent === question.answer) {
+
+                if (option.textContent === correctAnswer) {
                     option.classList.add('correct');
                 }
             });
-            
+
             if (isCorrect) {
                 score++;
                 document.getElementById('scoreValue').textContent = score;
             }
-            
+
             const resultContainer = document.getElementById('resultContainer');
             resultContainer.style.display = 'block';
             resultContainer.className = `alert alert-${isCorrect ? 'success' : 'danger'}`;
-            resultContainer.textContent = isCorrect 
-                ? 'Правильно!' 
-                : `Неправильно! Правильный ответ: ${question.answer}`;
-            
+            resultContainer.textContent = isCorrect
+                ? 'Правильно!'
+                : `Неправильно! Правильный ответ: ${correctAnswer}`;
+
             if (currentQuestionIndex === currentQuiz.questions.length - 1) {
                 document.getElementById('finishQuizBtn').style.display = 'inline-block';
             } else {
@@ -609,7 +614,7 @@
         function addQuestion() {
             const questionsContainer = document.getElementById('questionsContainer');
             const questionIndex = questionsContainer.children.length;
-            
+
             const questionDiv = document.createElement('div');
             questionDiv.className = 'question-item';
             questionDiv.innerHTML = `
@@ -632,7 +637,7 @@
                 <button type="button" class="btn btn-danger" onclick="this.parentNode.remove()">Удалить вопрос</button>
                 <hr>
             `;
-            
+
             questionsContainer.appendChild(questionDiv);
         }
 
@@ -646,7 +651,7 @@
 
         // Инициализация при загрузке
         updateAuthUI();
-        
+
         // Если уже на странице квизов, загружаем их
         if (document.getElementById('quizzes').classList.contains('active') && typeof loadQuizzes === 'function') {
             loadQuizzes();
@@ -655,5 +660,7 @@
 
     <!-- Подключаем внешний скрипт для работы с API -->
     <script src="script.js"></script>
+    <script src="ai-chat.js"></script>
 </body>
+
 </html>

@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const quizRoutes = require('./routes/quiz');
+const aiRoutes = require('./routes/ai');
 
 dotenv.config();
 const app = express();
@@ -19,5 +20,6 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/quizzes', quizRoutes);
+app.use('/api/ai', aiRoutes);
 
 module.exports = app;
