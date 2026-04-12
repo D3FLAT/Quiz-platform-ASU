@@ -31,7 +31,7 @@ services:
       DB_NAME: quizdb
       DB_PORT: 5432
       JWT_SECRET: supersecret
-      GROQ_API_KEY: gsk_secret_key
+      GROQ_API_KEY: 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
     depends_on:
       postgres:
         condition: service_healthy
