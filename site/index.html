@@ -225,64 +225,73 @@
             resize: vertical;
         }
 
-        .filter-container {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .filter-toggle {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            display: inline-flex;
+        .search-bar {
+            display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            margin-bottom: 24px;
         }
 
-        .filter-toggle:hover {
-            background: #2980b9;
+        .search-bar-input-wrap {
+            position: relative;
+            flex: 1;
         }
 
-        .filter-icon {
-            font-size: 18px;
-        }
-
-        .filter-panel {
-            display: none;
+        .search-bar-input-wrap .search-icon {
             position: absolute;
-            top: 50px;
-            left: 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            min-width: 300px;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94A3B8;
+            font-size: 15px;
+            pointer-events: none;
         }
 
-        .filter-panel.show {
-            display: block;
-        }
-
-        .filter-group {
-            margin-bottom: 15px;
-        }
-
-        .filter-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .filter-group input,
-        .filter-group select {
+        #searchInput {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
             margin: 0;
+            border: 1.5px solid #E2E8F4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #F8FAFF;
+            color: #1E293B;
+            transition: border-color .2s, box-shadow .2s;
+            box-sizing: border-box;
+        }
+
+        #searchInput:focus {
+            border-color: #4361EE;
+            box-shadow: 0 0 0 3px rgba(67,97,238,.1);
+            background: #fff;
+            outline: none;
+        }
+
+        #filterSelect {
+            width: auto;
+            margin: 0;
+            padding: 10px 36px 10px 14px;
+            border: 1.5px solid #E2E8F4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #F8FAFF;
+            color: #1E293B;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        #filterSelect:focus {
+            border-color: #4361EE;
+            box-shadow: 0 0 0 3px rgba(67,97,238,.1);
+            background-color: #fff;
+            outline: none;
         }
 
         .quiz-meta {
@@ -300,6 +309,7 @@
             color: #495057;
         }
     </style>
+    <link rel="stylesheet" href="modern.css">
 </head>
 
 <body>
@@ -363,28 +373,17 @@
                 <div class="tab" onclick="changeQuizTab('my')">Мои квизы</div>
             </div>
 
-            <!-- Фильтр -->
-            <div class="filter-container">
-                <button class="filter-toggle" onclick="toggleFilter()">
-                    <span class="filter-icon">⚙️</span>
-                    Фильтры и поиск
-                </button>
-
-                <div class="filter-panel" id="filterPanel">
-                    <div class="filter-group">
-                        <label for="searchInput">🔍 Поиск по названию</label>
-                        <input type="text" id="searchInput" placeholder="Введите название..." />
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="filterSelect">📊 Сортировать по</label>
-                        <select id="filterSelect">
-                            <option value="date">По дате добавления</option>
-                            <option value="name">По названию</option>
-                            <option value="popularity">По популярности</option>
-                        </select>
-                    </div>
+            <!-- Поиск и сортировка -->
+            <div class="search-bar">
+                <div class="search-bar-input-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Поиск по названию квиза…" />
                 </div>
+                <select id="filterSelect">
+                    <option value="date">По дате</option>
+                    <option value="name">По названию</option>
+                    <option value="popularity">По популярности</option>
+                </select>
             </div>
 
             <div id="allQuizzes" class="tab-content active">
@@ -497,22 +496,6 @@
                 resetQuizForm();
             }
         }
-
-        // Переключение фильтра
-        function toggleFilter() {
-            const panel = document.getElementById('filterPanel');
-            panel.classList.toggle('show');
-        }
-
-        // Закрытие фильтра при клике вне
-        document.addEventListener('click', function (e) {
-            const panel = document.getElementById('filterPanel');
-            const toggle = document.querySelector('.filter-toggle');
-
-            if (panel && toggle && !panel.contains(e.target) && !toggle.contains(e.target)) {
-                panel.classList.remove('show');
-            }
-        });
 
         // Переключение вкладок
         function changeQuizTab(tab) {
