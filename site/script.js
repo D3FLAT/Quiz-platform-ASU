@@ -94,6 +94,7 @@ async function loginUser() {
       localStorage.setItem('token', token);
       currentUser = data.user?.username || username;
       localStorage.setItem('currentUser', currentUser);
+      localStorage.setItem('userRole', data.user?.role || 'user');
       
       updateAuthUI();
       showMessage('loginMessage', 'Вход выполнен успешно!', 'success');
@@ -121,6 +122,7 @@ function logout() {
   token = null;
   localStorage.removeItem('currentUser');
   localStorage.removeItem('token');
+  localStorage.removeItem('userRole');
   updateAuthUI();
   showPage('home');
   console.log("User logged out");

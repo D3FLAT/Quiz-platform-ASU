@@ -308,6 +308,66 @@
             background: #e9ecef;
             color: #495057;
         }
+
+        /* ── Admin Panel ── */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        .admin-table th {
+            background: #0D1B2A;
+            color: #fff;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .admin-table th:first-child { border-radius: 8px 0 0 0; }
+        .admin-table th:last-child  { border-radius: 0 8px 0 0; }
+        .admin-table td {
+            padding: 11px 16px;
+            border-bottom: 1px solid #E2E8F4;
+            color: #1E293B;
+            vertical-align: middle;
+        }
+        .admin-table tr:last-child td { border-bottom: none; }
+        .admin-table tr:hover td { background: #F8FAFF; }
+        .admin-table .badge {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-admin { background: #FEF3C7; color: #92400E; }
+        .badge-user  { background: #EEF1FD; color: #4361EE; }
+        .admin-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .admin-stat-card {
+            background: #F8FAFF;
+            border: 1.5px solid #E2E8F4;
+            border-radius: 12px;
+            padding: 16px 22px;
+            min-width: 140px;
+        }
+        .admin-stat-card .stat-val {
+            font-size: 28px;
+            font-weight: 800;
+            color: #4361EE;
+            line-height: 1;
+        }
+        .admin-stat-card .stat-lbl {
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 4px;
+        }
+        #adminLink { color: #F59E0B !important; font-weight: 600 !important; }
     </style>
     <link rel="stylesheet" href="modern.css">
 </head>
@@ -320,6 +380,7 @@
                 <a href="#" onclick="showPage('home')">Главная</a>
                 <a href="#" onclick="showPage('quizzes')">Квизы</a>
                 <a href="#" onclick="showPage('create-quiz')">Создать квиз</a>
+                <a href="#" onclick="showPage('admin')" id="adminLink" style="display:none">⚙ Админ</a>
             </div>
             <div class="user-info" id="userInfo">
                 <span id="usernameDisplay">Гость</span>
@@ -452,6 +513,24 @@
                 <button class="btn" onclick="showPage('quizzes')">Вернуться к списку квизов</button>
             </div>
         </div>
+
+        <!-- Админ-панель -->
+        <div id="admin" class="page">
+            <div class="page-header">
+                <h2>⚙ Админ-панель</h2>
+            </div>
+            <div class="tabs">
+                <div class="tab active" onclick="switchAdminTab('quizzes', this)">📋 Все квизы</div>
+                <div class="tab" onclick="switchAdminTab('users', this)">👥 Пользователи</div>
+            </div>
+            <div id="adminTabQuizzes" class="tab-content active">
+                <div id="adminQuizList"><p class="text-muted">Загрузка...</p></div>
+            </div>
+            <div id="adminTabUsers" class="tab-content">
+                <div id="adminUserList"><p class="text-muted">Загрузка...</p></div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -469,11 +548,15 @@
                 document.getElementById('loginLink').style.display = 'none';
                 document.getElementById('registerLink').style.display = 'none';
                 document.getElementById('logoutLink').style.display = 'inline';
+                // Показываем ссылку админа если роль admin
+                const isAdmin = localStorage.getItem('userRole') === 'admin';
+                document.getElementById('adminLink').style.display = isAdmin ? 'inline' : 'none';
             } else {
                 document.getElementById('usernameDisplay').textContent = 'Гость';
                 document.getElementById('loginLink').style.display = 'inline';
                 document.getElementById('registerLink').style.display = 'inline';
                 document.getElementById('logoutLink').style.display = 'none';
+                document.getElementById('adminLink').style.display = 'none';
             }
         }
 
@@ -638,6 +721,187 @@
         // Если уже на странице квизов, загружаем их
         if (document.getElementById('quizzes').classList.contains('active') && typeof loadQuizzes === 'function') {
             loadQuizzes();
+        }
+
+        // ── Показ страницы admin ──────────────────────────
+        const _origShowPage = showPage;
+        showPage = function(pageId) {
+            if (pageId === 'admin') {
+                if (localStorage.getItem('userRole') !== 'admin') {
+                    alert('Доступ запрещён');
+                    return;
+                }
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('admin').classList.add('active');
+                loadAdminQuizzes();
+                return;
+            }
+            _origShowPage(pageId);
+        };
+
+        // ── Вкладки admin-панели ──────────────────────────
+        function switchAdminTab(tab, el) {
+            document.querySelectorAll('#admin .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#admin .tab-content').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('adminTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+            if (tab === 'quizzes') loadAdminQuizzes();
+            if (tab === 'users')   loadAdminUsers();
+        }
+
+        // ── Загрузка квизов (admin) ───────────────────────
+        async function loadAdminQuizzes() {
+            const token = localStorage.getItem('token');
+            const container = document.getElementById('adminQuizList');
+            container.innerHTML = '<p class="text-muted">Загрузка...</p>';
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/admin/quizzes', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const quizzes = await res.json();
+                if (!res.ok) throw new Error(quizzes.error);
+
+                // Статистика
+                container.innerHTML = `
+                    <div class="admin-stats">
+                        <div class="admin-stat-card">
+                            <div class="stat-val">${quizzes.length}</div>
+                            <div class="stat-lbl">Всего квизов</div>
+                        </div>
+                        <div class="admin-stat-card">
+                            <div class="stat-val">${quizzes.reduce((s,q) => s + (q.times_taken||0), 0)}</div>
+                            <div class="stat-lbl">Прохождений</div>
+                        </div>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Автор</th>
+                                <th>Категория</th>
+                                <th>Прохождений</th>
+                                <th>Дата</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${quizzes.map(q => `
+                                <tr>
+                                    <td>${q.id}</td>
+                                    <td><strong>${escHtml(q.title)}</strong></td>
+                                    <td>${escHtml(q.author || '—')}</td>
+                                    <td>${escHtml(q.category || '—')}</td>
+                                    <td>${q.times_taken || 0}</td>
+                                    <td>${new Date(q.created_at).toLocaleDateString('ru-RU')}</td>
+                                    <td>
+                                        <button class="btn btn-danger" style="padding:6px 12px;font-size:12px;margin:0"
+                                            onclick="adminDeleteQuiz(${q.id}, this)">Удалить</button>
+                                    </td>
+                                </tr>`).join('')}
+                        </tbody>
+                    </table>`;
+            } catch (err) {
+                container.innerHTML = `<p class="text-muted">Ошибка: ${err.message}</p>`;
+            }
+        }
+
+        // ── Загрузка пользователей (admin) ───────────────
+        async function loadAdminUsers() {
+            const token = localStorage.getItem('token');
+            const container = document.getElementById('adminUserList');
+            container.innerHTML = '<p class="text-muted">Загрузка...</p>';
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/admin/users', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const users = await res.json();
+                if (!res.ok) throw new Error(users.error);
+
+                container.innerHTML = `
+                    <div class="admin-stats">
+                        <div class="admin-stat-card">
+                            <div class="stat-val">${users.length}</div>
+                            <div class="stat-lbl">Пользователей</div>
+                        </div>
+                        <div class="admin-stat-card">
+                            <div class="stat-val">${users.filter(u => u.role === 'admin').length}</div>
+                            <div class="stat-lbl">Администраторов</div>
+                        </div>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Роль</th>
+                                <th>Дата регистрации</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${users.map(u => `
+                                <tr>
+                                    <td>${u.id}</td>
+                                    <td><strong>${escHtml(u.username)}</strong></td>
+                                    <td>${escHtml(u.email)}</td>
+                                    <td><span class="badge badge-${u.role}">${u.role}</span></td>
+                                    <td>${new Date(u.created_at).toLocaleDateString('ru-RU')}</td>
+                                    <td>
+                                        <button class="btn btn-outline" style="padding:6px 12px;font-size:12px;margin:0"
+                                            onclick="adminToggleRole(${u.id}, '${u.role}', this)">
+                                            ${u.role === 'admin' ? 'Снять права' : 'Сделать админом'}
+                                        </button>
+                                    </td>
+                                </tr>`).join('')}
+                        </tbody>
+                    </table>`;
+            } catch (err) {
+                container.innerHTML = `<p class="text-muted">Ошибка: ${err.message}</p>`;
+            }
+        }
+
+        // ── Удаление квиза (admin) ────────────────────────
+        async function adminDeleteQuiz(id, btn) {
+            if (!confirm('Удалить квиз #' + id + '?')) return;
+            const token = localStorage.getItem('token');
+            btn.disabled = true; btn.textContent = '...';
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/admin/quizzes/' + id, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) throw new Error('Ошибка');
+                btn.closest('tr').remove();
+            } catch {
+                btn.disabled = false; btn.textContent = 'Удалить';
+                alert('Не удалось удалить квиз');
+            }
+        }
+
+        // ── Смена роли (admin) ────────────────────────────
+        async function adminToggleRole(id, currentRole, btn) {
+            const newRole = currentRole === 'admin' ? 'user' : 'admin';
+            if (!confirm(`Изменить роль на "${newRole}"?`)) return;
+            const token = localStorage.getItem('token');
+            btn.disabled = true;
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/admin/users/' + id + '/role', {
+                    method: 'PATCH',
+                    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role: newRole })
+                });
+                if (!res.ok) throw new Error('Ошибка');
+                loadAdminUsers();
+            } catch {
+                btn.disabled = false;
+                alert('Не удалось изменить роль');
+            }
+        }
+
+        function escHtml(str) {
+            return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         }
     </script>
 
