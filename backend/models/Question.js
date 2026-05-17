@@ -3,21 +3,26 @@ const sequelize = require('../config/db');
 const Quiz = require('./Quiz');
 
 const Question = sequelize.define('Question', {
-  text: {
-    type: DataTypes.STRING,
+  question: {
+    type: DataTypes.TEXT,
     allowNull: false
   },
   options: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
+    type: DataTypes.JSONB,
     allowNull: false
   },
-  correctIndex: {
-    type: DataTypes.INTEGER,
+  correct_answer: {
+    type: DataTypes.STRING,
     allowNull: false
+  },
+  position: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   }
+}, {
+  tableName: 'questions',  // ← добавь
+  underscored: true,
+  timestamps: false
 });
-
-Question.belongsTo(Quiz);
-Quiz.hasMany(Question);
 
 module.exports = Question;

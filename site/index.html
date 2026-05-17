@@ -263,7 +263,7 @@
 
         #searchInput:focus {
             border-color: #4361EE;
-            box-shadow: 0 0 0 3px rgba(67,97,238,.1);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, .1);
             background: #fff;
             outline: none;
         }
@@ -289,7 +289,7 @@
 
         #filterSelect:focus {
             border-color: #4361EE;
-            box-shadow: 0 0 0 3px rgba(67,97,238,.1);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, .1);
             background-color: #fff;
             outline: none;
         }
@@ -316,6 +316,7 @@
             font-size: 14px;
             margin-top: 8px;
         }
+
         .admin-table th {
             background: #0D1B2A;
             color: #fff;
@@ -324,16 +325,30 @@
             font-weight: 600;
             font-size: 13px;
         }
-        .admin-table th:first-child { border-radius: 8px 0 0 0; }
-        .admin-table th:last-child  { border-radius: 0 8px 0 0; }
+
+        .admin-table th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        .admin-table th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
         .admin-table td {
             padding: 11px 16px;
             border-bottom: 1px solid #E2E8F4;
             color: #1E293B;
             vertical-align: middle;
         }
-        .admin-table tr:last-child td { border-bottom: none; }
-        .admin-table tr:hover td { background: #F8FAFF; }
+
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .admin-table tr:hover td {
+            background: #F8FAFF;
+        }
+
         .admin-table .badge {
             display: inline-block;
             padding: 3px 9px;
@@ -341,14 +356,24 @@
             font-size: 11px;
             font-weight: 600;
         }
-        .badge-admin { background: #FEF3C7; color: #92400E; }
-        .badge-user  { background: #EEF1FD; color: #4361EE; }
+
+        .badge-admin {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-user {
+            background: #EEF1FD;
+            color: #4361EE;
+        }
+
         .admin-stats {
             display: flex;
             gap: 16px;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
+
         .admin-stat-card {
             background: #F8FAFF;
             border: 1.5px solid #E2E8F4;
@@ -356,18 +381,24 @@
             padding: 16px 22px;
             min-width: 140px;
         }
+
         .admin-stat-card .stat-val {
             font-size: 28px;
             font-weight: 800;
             color: #4361EE;
             line-height: 1;
         }
+
         .admin-stat-card .stat-lbl {
             font-size: 12px;
             color: #64748B;
             margin-top: 4px;
         }
-        #adminLink { color: #F59E0B !important; font-weight: 600 !important; }
+
+        #adminLink {
+            color: #F59E0B !important;
+            font-weight: 600 !important;
+        }
     </style>
     <link rel="stylesheet" href="modern.css">
 </head>
@@ -524,10 +555,14 @@
                 <div class="tab" onclick="switchAdminTab('users', this)">👥 Пользователи</div>
             </div>
             <div id="adminTabQuizzes" class="tab-content active">
-                <div id="adminQuizList"><p class="text-muted">Загрузка...</p></div>
+                <div id="adminQuizList">
+                    <p class="text-muted">Загрузка...</p>
+                </div>
             </div>
             <div id="adminTabUsers" class="tab-content">
-                <div id="adminUserList"><p class="text-muted">Загрузка...</p></div>
+                <div id="adminUserList">
+                    <p class="text-muted">Загрузка...</p>
+                </div>
             </div>
         </div>
 
@@ -725,7 +760,7 @@
 
         // ── Показ страницы admin ──────────────────────────
         const _origShowPage = showPage;
-        showPage = function(pageId) {
+        showPage = function (pageId) {
             if (pageId === 'admin') {
                 if (localStorage.getItem('userRole') !== 'admin') {
                     alert('Доступ запрещён');
@@ -746,7 +781,7 @@
             el.classList.add('active');
             document.getElementById('adminTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
             if (tab === 'quizzes') loadAdminQuizzes();
-            if (tab === 'users')   loadAdminUsers();
+            if (tab === 'users') loadAdminUsers();
         }
 
         // ── Загрузка квизов (admin) ───────────────────────
@@ -769,7 +804,7 @@
                             <div class="stat-lbl">Всего квизов</div>
                         </div>
                         <div class="admin-stat-card">
-                            <div class="stat-val">${quizzes.reduce((s,q) => s + (q.times_taken||0), 0)}</div>
+                            <div class="stat-val">${quizzes.reduce((s, q) => s + (q.times_taken || 0), 0)}</div>
                             <div class="stat-lbl">Прохождений</div>
                         </div>
                     </div>
@@ -892,7 +927,12 @@
                     headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ role: newRole })
                 });
-                if (!res.ok) throw new Error('Ошибка');
+                const data = await res.json();
+                if (!res.ok) {
+                    alert(data.error); // покажет "Нельзя изменить роль суперадмина"
+                    btn.disabled = false;
+                    return;
+                }
                 loadAdminUsers();
             } catch {
                 btn.disabled = false;
@@ -901,7 +941,7 @@
         }
 
         function escHtml(str) {
-            return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
     </script>
 

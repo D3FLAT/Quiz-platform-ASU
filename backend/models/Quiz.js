@@ -7,13 +7,29 @@ const Quiz = sequelize.define('Quiz', {
     allowNull: false
   },
   description: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
-  }, 
-ableName: 'quizzes',
+  },
+  category: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  created_by: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  author: {
+    type: DataTypes.STRING,
+    defaultValue: 'system'
+  },
+  times_taken: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  }
+}, {
+  tableName: 'quizzes',
   underscored: true,
   timestamps: false
 });
-
 
 module.exports = Quiz;

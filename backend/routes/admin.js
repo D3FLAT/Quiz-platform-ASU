@@ -2,20 +2,26 @@ const express = require('express');
 const router = express.Router();
 const adminMiddleware = require('../middleware/adminMiddleware');
 const Quiz = require('../models/Quiz');
-const Question = require('../models/Question');
+const Question = require("../models/Question"); 
 const User = require('../models/User');
 
-// Все квизы с инфой об авторе
+Quiz.hasMany(Question, { foreignKey: 'quiz_id' });
+Question.belongsTo(Quiz, { foreignKey: 'quiz_id' });
+
+const SUPERADMIN = 'Вова'; // ← имя суперадмина, которого нельзя тронуть
+
+// Все квизы
 router.get('/quizzes', adminMiddleware, async (req, res) => {
   try {
-    const quizzes = await Quiz.findAll({
-      order: [['created_at', 'DESC']],
-      include: [
-        { model: Question, attributes: ['id'] }
-      ]
-    });
-    res.json(quizzes);
+    console.log('DB URL:', process.env.DATABASE_URL);
+    const { Pool } = require('pg');
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const result = await pool.query('SELECT id, title FROM quizzes ORDER BY id');
+    console.log('ALL QUIZZES:', result.rows);
+    await pool.end();
+    res.json(result.rows);
   } catch (err) {
+    console.error('ADMIN QUIZZES ERROR:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -29,6 +35,7 @@ router.get('/users', adminMiddleware, async (req, res) => {
     });
     res.json(users);
   } catch (err) {
+    console.error('ADMIN USERS ERROR:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -52,8 +59,15 @@ router.patch('/users/:id/role', adminMiddleware, async (req, res) => {
     if (!['user', 'admin'].includes(role)) {
       return res.status(400).json({ error: 'Invalid role' });
     }
+
     const user = await User.findByPk(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
+
+    // Защита суперадмина
+    if (user.username === SUPERADMIN) {
+      return res.status(403).json({ error: `Нельзя изменить роль суперадмина` });
+    }
+
     await user.update({ role });
     res.json({ message: `Role updated to ${role}`, user: { id: user.id, username: user.username, role } });
   } catch (err) {
