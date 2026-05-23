@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +33,9 @@
             display: block;
         }
 
-        h1, h2, h3 {
+        h1,
+        h2,
+        h3 {
             color: #2c3e50;
         }
 
@@ -68,7 +71,9 @@
             background: #27ae60;
         }
 
-        input, textarea, select {
+        input,
+        textarea,
+        select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -220,64 +225,73 @@
             resize: vertical;
         }
 
-        .filter-container {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .filter-toggle {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            display: inline-flex;
+        .search-bar {
+            display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            margin-bottom: 24px;
         }
 
-        .filter-toggle:hover {
-            background: #2980b9;
+        .search-bar-input-wrap {
+            position: relative;
+            flex: 1;
         }
 
-        .filter-icon {
-            font-size: 18px;
-        }
-
-        .filter-panel {
-            display: none;
+        .search-bar-input-wrap .search-icon {
             position: absolute;
-            top: 50px;
-            left: 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            min-width: 300px;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94A3B8;
+            font-size: 15px;
+            pointer-events: none;
         }
 
-        .filter-panel.show {
-            display: block;
-        }
-
-        .filter-group {
-            margin-bottom: 15px;
-        }
-
-        .filter-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .filter-group input,
-        .filter-group select {
+        #searchInput {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
             margin: 0;
+            border: 1.5px solid #E2E8F4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #F8FAFF;
+            color: #1E293B;
+            transition: border-color .2s, box-shadow .2s;
+            box-sizing: border-box;
+        }
+
+        #searchInput:focus {
+            border-color: #4361EE;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, .1);
+            background: #fff;
+            outline: none;
+        }
+
+        #filterSelect {
+            width: auto;
+            margin: 0;
+            padding: 10px 36px 10px 14px;
+            border: 1.5px solid #E2E8F4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #F8FAFF;
+            color: #1E293B;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        #filterSelect:focus {
+            border-color: #4361EE;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, .1);
+            background-color: #fff;
+            outline: none;
         }
 
         .quiz-meta {
@@ -294,8 +308,101 @@
             background: #e9ecef;
             color: #495057;
         }
+
+        /* ── Admin Panel ── */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .admin-table th {
+            background: #0D1B2A;
+            color: #fff;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .admin-table th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        .admin-table th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        .admin-table td {
+            padding: 11px 16px;
+            border-bottom: 1px solid #E2E8F4;
+            color: #1E293B;
+            vertical-align: middle;
+        }
+
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .admin-table tr:hover td {
+            background: #F8FAFF;
+        }
+
+        .admin-table .badge {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-admin {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-user {
+            background: #EEF1FD;
+            color: #4361EE;
+        }
+
+        .admin-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .admin-stat-card {
+            background: #F8FAFF;
+            border: 1.5px solid #E2E8F4;
+            border-radius: 12px;
+            padding: 16px 22px;
+            min-width: 140px;
+        }
+
+        .admin-stat-card .stat-val {
+            font-size: 28px;
+            font-weight: 800;
+            color: #4361EE;
+            line-height: 1;
+        }
+
+        .admin-stat-card .stat-lbl {
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 4px;
+        }
+
+        #adminLink {
+            color: #F59E0B !important;
+            font-weight: 600 !important;
+        }
     </style>
+    <link rel="stylesheet" href="modern.css">
 </head>
+
 <body>
     <div class="container">
         <!-- Навигация -->
@@ -304,6 +411,7 @@
                 <a href="#" onclick="showPage('home')">Главная</a>
                 <a href="#" onclick="showPage('quizzes')">Квизы</a>
                 <a href="#" onclick="showPage('create-quiz')">Создать квиз</a>
+                <a href="#" onclick="showPage('admin')" id="adminLink" style="display:none">⚙ Админ</a>
             </div>
             <div class="user-info" id="userInfo">
                 <span id="usernameDisplay">Гость</span>
@@ -351,46 +459,31 @@
         <!-- Список квизов -->
         <div id="quizzes" class="page">
             <h1>Выберите квиз</h1>
-            
+
             <div class="tabs">
                 <div class="tab active" onclick="changeQuizTab('all')">Все квизы</div>
                 <div class="tab" onclick="changeQuizTab('my')">Мои квизы</div>
             </div>
-            
-            <!-- Фильтр -->
-            <div class="filter-container">
-                <button class="filter-toggle" onclick="toggleFilter()">
-                    <span class="filter-icon">⚙️</span>
-                    Фильтры и поиск
-                </button>
-                
-                <div class="filter-panel" id="filterPanel">
-                    <div class="filter-group">
-                        <label for="searchInput">🔍 Поиск по названию</label>
-                        <input
-                            type="text"
-                            id="searchInput"
-                            placeholder="Введите название..."
-                        />
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="filterSelect">📊 Сортировать по</label>
-                        <select id="filterSelect">
-                            <option value="date">По дате добавления</option>
-                            <option value="name">По названию</option>
-                            <option value="popularity">По популярности</option>
-                        </select>
-                    </div>
+
+            <!-- Поиск и сортировка -->
+            <div class="search-bar">
+                <div class="search-bar-input-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Поиск по названию квиза…" />
                 </div>
+                <select id="filterSelect">
+                    <option value="date">По дате</option>
+                    <option value="name">По названию</option>
+                    <option value="popularity">По популярности</option>
+                </select>
             </div>
-            
+
             <div id="allQuizzes" class="tab-content active">
                 <div class="quiz-list" id="quizList">
                     <p>Загрузка квизов...</p>
                 </div>
             </div>
-            
+
             <div id="myQuizzes" class="tab-content">
                 <div class="quiz-list" id="myQuizList">
                     <p>Загрузка...</p>
@@ -400,10 +493,15 @@
 
         <!-- Создание квиза -->
         <div id="create-quiz" class="page">
-            <h1>Создать новый квиз</h1>
+            <div class="page-header">
+                <h1>Создать новый квиз</h1>
+            </div>
             <form id="quizForm" onsubmit="event.preventDefault(); saveQuiz();">
-                <input type="text" id="quizTitle" placeholder="Название квиза" required>
-                <textarea id="quizDescription" placeholder="Описание квиза"></textarea>
+                <label>Название квиза</label>
+                <input type="text" id="quizTitle" placeholder="Введите название…" required>
+                <label>Описание</label>
+                <textarea id="quizDescription" placeholder="Краткое описание квиза…"></textarea>
+                <label>Категория</label>
                 <select id="quizCategory">
                     <option value="programming">Программирование</option>
                     <option value="web">Веб-разработка</option>
@@ -411,12 +509,17 @@
                     <option value="databases">Базы данных</option>
                     <option value="other">Другое</option>
                 </select>
-                
+
+                <hr>
                 <div id="questionsContainer"></div>
-                
-                <button type="button" class="btn" onclick="addQuestion()">Добавить вопрос</button>
+
+                <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                    <button type="button" class="btn btn-outline" onclick="addQuestion()">＋ Добавить вопрос</button>
+                    <span class="text-muted">Поддерживаются: выбор ответа, ввод текста, последовательность, сопоставление</span>
+                </div>
+
                 <div id="quizMessage" class="alert" style="display:none;"></div>
-                <button type="submit" class="btn btn-success">Сохранить квиз</button>
+                <button type="submit" class="btn btn-success" style="margin-top:16px">💾 Сохранить квиз</button>
             </form>
         </div>
 
@@ -424,24 +527,26 @@
         <div id="play-quiz" class="page">
             <h1 id="quizPlayTitle"></h1>
             <p id="quizPlayDescription"></p>
-            
+
             <div class="progress-bar">
                 <div class="progress" id="quizProgress"></div>
             </div>
-            
+
             <div id="quizPlayArea">
                 <div id="questionContainer">
                     <h2 id="questionText"></h2>
                     <div id="optionsContainer"></div>
                 </div>
-                
+
                 <div id="resultContainer" class="alert" style="display:none;"></div>
                 <div id="scoreContainer">Счет: <span id="scoreValue">0</span></div>
-                
-                <button id="nextQuestionBtn" class="btn" style="display:none;" onclick="nextQuestion()">Следующий вопрос</button>
-                <button id="finishQuizBtn" class="btn btn-success" style="display:none;" onclick="finishQuiz()">Завершить квиз</button>
+
+                <button id="nextQuestionBtn" class="btn" style="display:none;" onclick="nextQuestion()">Следующий
+                    вопрос</button>
+                <button id="finishQuizBtn" class="btn btn-success" style="display:none;"
+                    onclick="finishQuiz()">Завершить квиз</button>
             </div>
-            
+
             <div id="quizResults" style="display:none;">
                 <h2>Результаты квиза</h2>
                 <p>Ваш счет: <span id="finalScore"></span> из <span id="totalQuestions"></span></p>
@@ -449,6 +554,28 @@
                 <button class="btn" onclick="showPage('quizzes')">Вернуться к списку квизов</button>
             </div>
         </div>
+
+        <!-- Админ-панель -->
+        <div id="admin" class="page">
+            <div class="page-header">
+                <h2>⚙ Админ-панель</h2>
+            </div>
+            <div class="tabs">
+                <div class="tab active" onclick="switchAdminTab('quizzes', this)">📋 Все квизы</div>
+                <div class="tab" onclick="switchAdminTab('users', this)">👥 Пользователи</div>
+            </div>
+            <div id="adminTabQuizzes" class="tab-content active">
+                <div id="adminQuizList">
+                    <p class="text-muted">Загрузка...</p>
+                </div>
+            </div>
+            <div id="adminTabUsers" class="tab-content">
+                <div id="adminUserList">
+                    <p class="text-muted">Загрузка...</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -466,11 +593,15 @@
                 document.getElementById('loginLink').style.display = 'none';
                 document.getElementById('registerLink').style.display = 'none';
                 document.getElementById('logoutLink').style.display = 'inline';
+                // Показываем ссылку админа если роль admin
+                const isAdmin = localStorage.getItem('userRole') === 'admin';
+                document.getElementById('adminLink').style.display = isAdmin ? 'inline' : 'none';
             } else {
                 document.getElementById('usernameDisplay').textContent = 'Гость';
                 document.getElementById('loginLink').style.display = 'inline';
                 document.getElementById('registerLink').style.display = 'inline';
                 document.getElementById('logoutLink').style.display = 'none';
+                document.getElementById('adminLink').style.display = 'none';
             }
         }
 
@@ -480,13 +611,13 @@
                 showPage('login');
                 return;
             }
-            
+
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
-            
+
             document.getElementById(pageId).classList.add('active');
-            
+
             if (pageId === 'quizzes' && typeof loadQuizzes === 'function') {
                 loadQuizzes();
             } else if (pageId === 'create-quiz') {
@@ -494,27 +625,11 @@
             }
         }
 
-        // Переключение фильтра
-        function toggleFilter() {
-            const panel = document.getElementById('filterPanel');
-            panel.classList.toggle('show');
-        }
-
-        // Закрытие фильтра при клике вне
-        document.addEventListener('click', function(e) {
-            const panel = document.getElementById('filterPanel');
-            const toggle = document.querySelector('.filter-toggle');
-            
-            if (panel && toggle && !panel.contains(e.target) && !toggle.contains(e.target)) {
-                panel.classList.remove('show');
-            }
-        });
-
         // Переключение вкладок
         function changeQuizTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
+
             if (tab === 'all') {
                 document.querySelector('.tab:nth-child(1)').classList.add('active');
                 document.getElementById('allQuizzes').classList.add('active');
@@ -530,13 +645,13 @@
                 finishQuiz();
                 return;
             }
-            
+
             const question = currentQuiz.questions[currentQuestionIndex];
             document.getElementById('questionText').textContent = question.question;
-            
+
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = '';
-            
+
             question.options.forEach((option, index) => {
                 const optionElement = document.createElement('div');
                 optionElement.className = 'option';
@@ -544,10 +659,10 @@
                 optionElement.onclick = () => selectAnswer(option);
                 optionsContainer.appendChild(optionElement);
             });
-            
+
             const progress = (currentQuestionIndex / currentQuiz.questions.length) * 100;
             document.getElementById('quizProgress').style.width = `${progress}%`;
-            
+
             document.getElementById('nextQuestionBtn').style.display = 'none';
             document.getElementById('finishQuizBtn').style.display = 'none';
             document.getElementById('resultContainer').style.display = 'none';
@@ -556,42 +671,43 @@
         // Выбор ответа
         function selectAnswer(selectedOption) {
             const question = currentQuiz.questions[currentQuestionIndex];
-            const isCorrect = selectedOption === question.answer;
-            
+            const correctAnswer = question.correct_answer || question.answer;
+            const isCorrect = selectedOption === correctAnswer;
+
             userAnswers.push({
                 question: question.question,
                 userAnswer: selectedOption,
-                correctAnswer: question.answer,
-                isCorrect
+                correctAnswer: correctAnswer,
+                isCorrect: isCorrect
             });
-            
+
             const options = document.querySelectorAll('.option');
             options.forEach(option => {
                 option.classList.remove('selected', 'correct', 'incorrect');
                 option.onclick = null;
-                
+
                 if (option.textContent === selectedOption) {
                     option.classList.add('selected');
                     option.classList.add(isCorrect ? 'correct' : 'incorrect');
                 }
-                
-                if (option.textContent === question.answer) {
+
+                if (option.textContent === correctAnswer) {
                     option.classList.add('correct');
                 }
             });
-            
+
             if (isCorrect) {
                 score++;
                 document.getElementById('scoreValue').textContent = score;
             }
-            
+
             const resultContainer = document.getElementById('resultContainer');
             resultContainer.style.display = 'block';
             resultContainer.className = `alert alert-${isCorrect ? 'success' : 'danger'}`;
-            resultContainer.textContent = isCorrect 
-                ? 'Правильно!' 
-                : `Неправильно! Правильный ответ: ${question.answer}`;
-            
+            resultContainer.textContent = isCorrect
+                ? 'Правильно!'
+                : `Неправильно! Правильный ответ: ${correctAnswer}`;
+
             if (currentQuestionIndex === currentQuiz.questions.length - 1) {
                 document.getElementById('finishQuizBtn').style.display = 'inline-block';
             } else {
@@ -609,7 +725,7 @@
         function addQuestion() {
             const questionsContainer = document.getElementById('questionsContainer');
             const questionIndex = questionsContainer.children.length;
-            
+
             const questionDiv = document.createElement('div');
             questionDiv.className = 'question-item';
             questionDiv.innerHTML = `
@@ -632,7 +748,7 @@
                 <button type="button" class="btn btn-danger" onclick="this.parentNode.remove()">Удалить вопрос</button>
                 <hr>
             `;
-            
+
             questionsContainer.appendChild(questionDiv);
         }
 
@@ -646,14 +762,204 @@
 
         // Инициализация при загрузке
         updateAuthUI();
-        
+
         // Если уже на странице квизов, загружаем их
         if (document.getElementById('quizzes').classList.contains('active') && typeof loadQuizzes === 'function') {
             loadQuizzes();
+        }
+
+        // ── Показ страницы admin ──────────────────────────
+        const _origShowPage = showPage;
+        showPage = function (pageId) {
+            if (pageId === 'admin') {
+                if (localStorage.getItem('userRole') !== 'admin') {
+                    alert('Доступ запрещён');
+                    return;
+                }
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('admin').classList.add('active');
+                loadAdminQuizzes();
+                return;
+            }
+            _origShowPage(pageId);
+        };
+
+        // ── Вкладки admin-панели ──────────────────────────
+        function switchAdminTab(tab, el) {
+            document.querySelectorAll('#admin .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#admin .tab-content').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('adminTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+            if (tab === 'quizzes') loadAdminQuizzes();
+            if (tab === 'users') loadAdminUsers();
+        }
+
+        // ── Загрузка квизов (admin) ───────────────────────
+        async function loadAdminQuizzes() {
+            const token = localStorage.getItem('token');
+            const container = document.getElementById('adminQuizList');
+            container.innerHTML = '<p class="text-muted">Загрузка...</p>';
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/admin/quizzes', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const quizzes = await res.json();
+                if (!res.ok) throw new Error(quizzes.error);
+
+                // Статистика
+                container.innerHTML = `
+                    <div class="admin-stats">
+                        <div class="admin-stat-card">
+                            <div class="stat-val">${quizzes.length}</div>
+                            <div class="stat-lbl">Всего квизов</div>
+                        </div>
+                        <div class="admin-stat-card">
+                            <div class="stat-val">${quizzes.reduce((s, q) => s + (q.times_taken || 0), 0)}</div>
+                            <div class="stat-lbl">Прохождений</div>
+                        </div>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Автор</th>
+                                <th>Категория</th>
+                                <th>Прохождений</th>
+                                <th>Дата</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${quizzes.map(q => `
+                                <tr>
+                                    <td>${q.id}</td>
+                                    <td><strong>${escHtml(q.title)}</strong></td>
+                                    <td>${escHtml(q.author || '—')}</td>
+                                    <td>${escHtml(q.category || '—')}</td>
+                                    <td>${q.times_taken || 0}</td>
+                                    <td>${new Date(q.created_at).toLocaleDateString('ru-RU')}</td>
+                                    <td>
+                                        <button class="btn btn-danger" style="padding:6px 12px;font-size:12px;margin:0"
+                                            onclick="adminDeleteQuiz(${q.id}, this)">Удалить</button>
+                                    </td>
+                                </tr>`).join('')}
+                        </tbody>
+                    </table>`;
+            } catch (err) {
+                container.innerHTML = `<p class="text-muted">Ошибка: ${err.message}</p>`;
+            }
+        }
+
+        // ── Загрузка пользователей (admin) ───────────────
+        async function loadAdminUsers() {
+            const token = localStorage.getItem('token');
+            const container = document.getElementById('adminUserList');
+            container.innerHTML = '<p class="text-muted">Загрузка...</p>';
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/admin/users', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const users = await res.json();
+                if (!res.ok) throw new Error(users.error);
+
+                container.innerHTML = `
+                    <div class="admin-stats">
+                        <div class="admin-stat-card">
+                            <div class="stat-val">${users.length}</div>
+                            <div class="stat-lbl">Пользователей</div>
+                        </div>
+                        <div class="admin-stat-card">
+                            <div class="stat-val">${users.filter(u => u.role === 'admin').length}</div>
+                            <div class="stat-lbl">Администраторов</div>
+                        </div>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Роль</th>
+                                <th>Дата регистрации</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${users.map(u => `
+                                <tr>
+                                    <td>${u.id}</td>
+                                    <td><strong>${escHtml(u.username)}</strong></td>
+                                    <td>${escHtml(u.email)}</td>
+                                    <td><span class="badge badge-${u.role}">${u.role}</span></td>
+                                    <td>${new Date(u.created_at).toLocaleDateString('ru-RU')}</td>
+                                    <td>
+                                        <button class="btn btn-outline" style="padding:6px 12px;font-size:12px;margin:0"
+                                            onclick="adminToggleRole(${u.id}, '${u.role}', this)">
+                                            ${u.role === 'admin' ? 'Снять права' : 'Сделать админом'}
+                                        </button>
+                                    </td>
+                                </tr>`).join('')}
+                        </tbody>
+                    </table>`;
+            } catch (err) {
+                container.innerHTML = `<p class="text-muted">Ошибка: ${err.message}</p>`;
+            }
+        }
+
+        // ── Удаление квиза (admin) ────────────────────────
+        async function adminDeleteQuiz(id, btn) {
+            if (!confirm('Удалить квиз #' + id + '?')) return;
+            const token = localStorage.getItem('token');
+            btn.disabled = true; btn.textContent = '...';
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/admin/quizzes/' + id, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) throw new Error('Ошибка');
+                btn.closest('tr').remove();
+            } catch {
+                btn.disabled = false; btn.textContent = 'Удалить';
+                alert('Не удалось удалить квиз');
+            }
+        }
+
+        // ── Смена роли (admin) ────────────────────────────
+        async function adminToggleRole(id, currentRole, btn) {
+            const newRole = currentRole === 'admin' ? 'user' : 'admin';
+            if (!confirm(`Изменить роль на "${newRole}"?`)) return;
+            const token = localStorage.getItem('token');
+            btn.disabled = true;
+            try {
+                const res = await fetch('http://127.0.0.1:5000/api/admin/users/' + id + '/role', {
+                    method: 'PATCH',
+                    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role: newRole })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    alert(data.error); // покажет "Нельзя изменить роль суперадмина"
+                    btn.disabled = false;
+                    return;
+                }
+                loadAdminUsers();
+            } catch {
+                btn.disabled = false;
+                alert('Не удалось изменить роль');
+            }
+        }
+
+        function escHtml(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
     </script>
 
     <!-- Подключаем внешний скрипт для работы с API -->
     <script src="script.js"></script>
+    <!-- Новые типы вопросов -->
+    <script src="question-types.js"></script>
+    <script src="ai-chat.js"></script>
 </body>
+
 </html>

@@ -94,7 +94,8 @@ async function loginUser() {
       localStorage.setItem('token', token);
       currentUser = data.user?.username || username;
       localStorage.setItem('currentUser', currentUser);
-      
+      localStorage.setItem('userRole', data.user?.role || 'user');
+
       updateAuthUI();
       showMessage('loginMessage', 'Вход выполнен успешно!', 'success');
       document.getElementById('loginForm').reset();
@@ -121,6 +122,7 @@ function logout() {
   token = null;
   localStorage.removeItem('currentUser');
   localStorage.removeItem('token');
+  localStorage.removeItem('userRole');
   updateAuthUI();
   showPage('home');
   console.log("User logged out");
@@ -212,7 +214,7 @@ function createQuizCard(quiz) {
       <span>👥 ${popularity}</span>
     </div>
     <button class="btn" onclick="startQuiz('${quiz.id}')">Начать</button>
-    ${(quiz.author === currentUser || quiz.created_by === currentUser) ? 
+    ${(quiz.author === currentUser || quiz.created_by === currentUser) ?
       `<button class="btn btn-danger" onclick="deleteQuiz('${quiz.id}')">Удалить</button>` : ''}
   `;
 
@@ -230,32 +232,28 @@ async function startQuiz(quizId) {
   }
 
   try {
-    // Загружаем полные данные квиза
     const res = await fetch(`${API_BASE}/quizzes/${quizId}`);
     const quiz = await res.json();
 
-    if (!quiz || !quiz.questions) {
+    // Нормализуем — Sequelize возвращает Questions с заглавной
+    quiz.questions = quiz.Questions || quiz.questions || [];
+
+    if (quiz.questions.length === 0) {
       throw new Error('Квиз не найден или не содержит вопросов');
     }
 
-    console.log("Starting quiz:", quiz);
-
     // Увеличиваем счетчик прохождений
     try {
-      await fetch(`${API_BASE}/quizzes/${quizId}/increment`, {
-        method: 'POST'
-      });
+      await fetch(`${API_BASE}/quizzes/${quizId}/increment`, { method: 'POST' });
     } catch (e) {
       console.log('Счетчик не обновлен:', e);
     }
 
-    // Устанавливаем глобальные переменные
     currentQuiz = quiz;
     currentQuestionIndex = 0;
     score = 0;
     userAnswers = [];
 
-    // Настраиваем UI
     document.getElementById('quizPlayTitle').textContent = quiz.title;
     document.getElementById('quizPlayDescription').textContent = quiz.description || '';
     document.getElementById('scoreValue').textContent = '0';
@@ -352,6 +350,7 @@ async function saveQuiz() {
     questions.push({
       question: questionText,
       options: options,
+      correct_answer: options[correctAnswerIndex],
       answer: options[correctAnswerIndex]
     });
   });
@@ -484,11 +483,11 @@ function filterQuizzes(data) {
 // ============================================
 
 // Ждем загрузки DOM и проверяем API
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
   console.log('🚀 Script.js загружен - работаем с Backend API');
-  
+
   // Проверяем подключение к API
-  await checkAPIConnection();
+  await checkAPI();
 
   // Инициализируем обработчики фильтра
   initFilterHandlers();
@@ -504,28 +503,16 @@ document.addEventListener('DOMContentLoaded', async function() {
   console.log('Token:', token ? 'Есть' : 'Нет');
 });
 
-/**
- * Инициализация обработчиков фильтра
- */
-function initFilterHandlers() {
-  const searchInput = document.getElementById('searchInput');
-  const filterSelect = document.getElementById('filterSelect');
+document.addEventListener('input', function (e) {
+  if (e.target.id === 'searchInput') loadQuizzes();
+});
 
-  if (searchInput) {
-    searchInput.addEventListener('input', function() {
-      loadQuizzes();
-    });
-  }
+document.addEventListener('change', function (e) {
+  if (e.target.id === 'filterSelect') loadQuizzes();
+});
 
-  if (filterSelect) {
-    filterSelect.addEventListener('change', function() {
-      loadQuizzes();
-    });
-  }
-
-  // Загружаем сохраненные настройки
-  loadFilterSettings();
-}
+// Загружаем сохраненные настройки
+loadFilterSettings();
 
 /**
  * Загрузка сохраненных настроек фильтра
